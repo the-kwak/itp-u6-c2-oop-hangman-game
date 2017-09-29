@@ -7,9 +7,12 @@ class GuessAttempt(object):
         self.letter = letter
         if hit and miss:
             raise InvalidGuessAttempt()
+        
+        # use or to choose True or False
         self.hit = hit or False
         self.miss = miss or False
     
+    # These functions will return either True or False
     def is_hit(self):
         return self.hit
     
