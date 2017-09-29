@@ -39,12 +39,8 @@ class GuessWord(object):
             raise InvalidGuessedLetterException()
             
         if attempt.lower() in self.answer.lower():
-            hit_locations = [i for i in range(len(self.answer))
-            if attempt.lower() ==self.answer[i].lower()]
-            
-            for i in hit_locations:
-                self.masked_list[i] = attempt.lower()
-            self.masked = ''.join(self.masked_list)
+            self.masked =''.join([attempt.lower() if self.answer[i].lower() == attempt.lower() 
+            else list(self.masked)[i] for i in range(len(self.answer))])
             self.hit = True
         else:
             self.hit = False
