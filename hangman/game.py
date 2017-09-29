@@ -2,7 +2,19 @@ from .exceptions import *
 
 
 class GuessAttempt(object):
-    pass
+    
+    def __init__(self, letter, hit = None, miss = None):
+        self.letter = letter
+        if hit and miss:
+            raise InvalidGuessAttempt()
+        self.hit = hit or False
+        self.miss = miss or False
+    
+    def is_hit(self):
+        return self.hit
+    
+    def is_miss(self):
+        return self.miss
 
 
 class GuessWord(object):
