@@ -49,14 +49,43 @@ class GuessWord(object):
 class HangmanGame(object):
     
     WORD_LIST = ['rmotr', 'python', 'awesome']
+    
     def __init__(self, word_list = WORD_LIST, number_of_guesses = 5):
         self.word = GuessWord(HangmanGame.select_random_word(word_list))
         self.remaining_misses = number_of_guesses
         self.previous_guesses = []
-     
+    
+    def guess(self,letter):
+        if self.is_finished():
+            raise GameFinishedException()
+                
+        self.previous_guesses.append(letter.lower())
+        store =  self.word.perform_attempt(letter)
+        if store.is_miss():
+            self.remaining_misses -=1
+        if self.is_won():
+            raise GameWonException()
+        elif self.is_lost():
+            raise GameLostException()
+        
+        return store
+    
     @classmethod
     def select_random_word(cls, list_of_words):
         if list_of_words:
             shuffle(list_of_words)
             return list_of_words[0]
         raise InvalidListOfWordsException()
+        
+    def is_finished(self):
+      
+      return self.is_lost() or self.is_won()
+        
+    def is_won(self):
+        
+        if self.word.masked == self.word.answer:
+            return True
+        return False
+        
+    def is_lost(self):
+        return not self.remaining_misses
