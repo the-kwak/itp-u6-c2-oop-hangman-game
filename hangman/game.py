@@ -1,24 +1,24 @@
 from .exceptions import *
-
+from random import shuffle
 
 class GuessAttempt(object):
     
     def __init__(self, letter, hit = None, miss = None):
+        self.hit = hit or False
+        self.miss = miss or False
         self.letter = letter
         if hit and miss:
             raise InvalidGuessAttempt()
         
         # use or to choose True or False
-        self.hit = hit or False
-        self.miss = miss or False
-    
+
+
     # These functions will return either True or False
     def is_hit(self):
         return self.hit
     
     def is_miss(self):
         return self.miss
-
 
 class GuessWord(object):
     
@@ -32,8 +32,6 @@ class GuessWord(object):
         self.hit = bool
         self.miss = bool
     
-    # This needs to take in the object from GuessAttempt and look at the attmept.letter so it can return GuessAttempt.hit()
-    # or miss() will wok on that one next
     def perform_attempt(self, attempt):
         if len(attempt) > 1 or not attempt :
             raise InvalidGuessedLetterException()
@@ -46,8 +44,19 @@ class GuessWord(object):
             self.hit = False
         self.miss = not self.hit
         
-        return(GuessAttempt(attempt, self.hit or None, self.miss or None))
-    
+        return(GuessAttempt(attempt, self.hit , self.miss ))
 
 class HangmanGame(object):
-    pass
+    
+    WORD_LIST = ['rmotr', 'python', 'awesome']
+    def __init__(self, word_list = WORD_LIST, number_of_guesses = 5):
+        self.word = GuessWord(HangmanGame.select_random_word(word_list))
+        self.remaining_misses = number_of_guesses
+        self.previous_guesses = []
+     
+    @classmethod
+    def select_random_word(cls, list_of_words):
+        if list_of_words:
+            shuffle(list_of_words)
+            return list_of_words[0]
+        raise InvalidListOfWordsException()
